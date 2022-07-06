@@ -1,11 +1,14 @@
 package com.example.Studentmanagementsystem.controller;
 
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.Studentmanagementsystem.entity.Student;
 import com.example.Studentmanagementsystem.service.StudentService;
@@ -59,9 +62,22 @@ public class StudentController {
 		studentService.updateStudent(existingStudent);
 		return "redirect:/students";
 	}
+
 	@GetMapping("/students/{id}")
 	public String deleteStudent(@PathVariable Long id) {
 		studentService.deleteStudentById(id);
 		return "redirect:/students";
+	}
+
+	@RequestMapping(path = { "/", "/search" })
+	public String home(Student student, Model model, String keyword) {
+		if (keyword != null) {
+//			List<Student> list = studentService.getByKeyword(keyword);
+			model.addAttribute("students", studentService.getByKeyword(keyword));
+		} else {
+//			List<Student> list = studentService.getAllStudents();
+			model.addAttribute("student", studentService.getAllStudents());
+		}
+		return "students";
 	}
 }
